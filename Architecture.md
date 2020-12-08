@@ -5,10 +5,11 @@ possible
 
 ### Architecture similateur
 
-|class incendie 					|methodes|
+|class incendie 					| |
 |---|---|
+|attribut						|methodes|
 |coordonnées(GPS)					|set_intensite|
-|intensité				 
+|intensité				 		||
 	
 |class service 						|methodes
 |---|---|
