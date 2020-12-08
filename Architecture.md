@@ -12,27 +12,35 @@ possible
 |coordonnées(GPS)					|set_intensite (int new_intensité)|
 |intensité				 		||
 	
-|class service 						|methodes
+|class service 						||
 |---|---|
-|caserne						|Detecter_incendie
-|incendie						|Detecter_service_urgence 
+|Attribut|methodes|
+|---|---|
+|caserne						|Detecter_incendie ()
+|incendie						|Detecter_service_urgence ()
 						
 	
 	
-|class caserne					|Methodes
+|class caserne						||
 |---|---|
-|coordonnées					|add_pompier
-|list camions					|add_camions
-|list pompiers					|remove_pompier
-|						|remove_camions
-|						|set_coordonnees
+|Attribut|methodes|
+|---|---|
+|coordonnées					|add_pompier (Pompier p)
+|list camions					|add_camion (Camion C)
+|list pompiers					|remove_pompier (Pompier p)
+|						|remove_camion (Camion C)
+|						|set_coordonnees (int x, int y)
 	
-|class pompier             			|methodes|
+|class pompier 						||
+|---|---|
+|Attribut|methodes|
 |---|---|
 |matricule
 |nom
 	
-|class camion      				|methodes|
+|class camion 						||
+|---|---|
+|Attribut|methodes|
 |---|---|
 |dimension|
 |informations|
@@ -49,32 +57,42 @@ possible
 
 #**Architecture Emergency**	
 	
-|class incendie 				|methodes|
+|class incendie 			||
 |---|---|
-|coordonnées					|set_intensite|
+|Attribut|methodes|
+|---|---|
+|coordonnées					|set_intensite (int new_intensité)|
 |intensité				 	|
 	
-|class service 				|methodes
+|class service				||
 |---|---|
-|caserne				|Detecter_incendie
-|incendie				|affecter_caserne
-|					|Detecter_service_urgence 
-	
-|class caserne				|Methodes
+|Attribut|methodes|
 |---|---|
-|coordonnées			|add_pompier
-|list camions			|add_camions
-|list pompiers			|remove_pompier
-|				|remove_camions
-|				|set_coordonnees
+|caserne				|Detecter_incendie ()
+|incendie				|affecter_caserne ()
+|					|Detecter_service_urgence () 
 	
-|class pompier             	|methodes|
-|-----|-----|
+|class caserne				||
+|---|---|
+|Attribut|methodes|
+|---|---|
+|coordonnées			|add_pompier (Pompier p)
+|list camions			|add_camions (Camion c)
+|list pompiers			|remove_pompier (Pompier p)
+|				|remove_camions (Camion c)
+|				|set_coordonnees (int x, int y)
+	
+|class pompier 				||
+|---|---|
+|Attribut|methodes|
+|---|---|
 |matricule|
 |nom|
 	
-|class camion      			|methodes|
-|-----|----|
+|class camion 				||
+|---|---|
+|Attribut|methodes|
+|---|---|
 |dimension				|
 |informations				|	
 	
