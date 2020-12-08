@@ -3,7 +3,7 @@
 * la partie Simulator et la partie Emergency doivent être le plus faiblement couplées
 possible
 
-#Architecture similateur
+### Architecture similateur
 
 |class incendie 					|methodes|
 |---|---|
@@ -39,7 +39,7 @@ possible
 **SCHEMA MPD BASE DE DONNES SIMULATEUR**
 
 |Entitees					|attributs|			|type attribut|	
-|---|---|
+|-----|-----|-----|
 |incendie					|id				|int|
 |						|(x, y)( de 0 à 9)		|point|
 |						|intensite			|int|
@@ -67,25 +67,25 @@ possible
 |				|set_coordonnees
 	
 |class pompier             	|methodes|
-|---|---|
+|-----|-----|
 |matricule|
 |nom|
 	
 |class camion      			|methodes|
-|---|---|
+|-----|----|
 |dimension				|
 |informations				|	
 	
 **SCHEMA MPD BASE DE DONNES Emergency**
 
 |Entitees					|attributs				|type attribut|	
-|---|---|---|
+|-----|-----|-----|
 |incendie|					|id					|int|
 | 						|(x, y)				    	|point|
 | 						|intensite ( de 0 à 9)			|int|
 | 						|date					|datetime|
-|---|---|---|
-|class caserne|					|id					|int|
+|-----|-----|-----|
+|caserne|					|id					|int|
 | 						|(x, y)				    	|point|
 | 						|adresse postal		    		|varchar 255|
 |						|telephone				|varchar 10|
