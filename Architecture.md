@@ -7,8 +7,9 @@ possible
 
 |class incendie 					| |
 |---|---|
-|attribut						|methodes|
-|coordonnées(GPS)					|set_intensite|
+|Attribut						|methodes|
+|---|---|
+|coordonnées(GPS)					|set_intensite (int new_intensité)|
 |intensité				 		||
 	
 |class service 						|methodes
