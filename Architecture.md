@@ -11,12 +11,13 @@ possible
 |---|---|
 |coordonnées(GPS)					|set_intensite (int new_intensité)|
 |intensité				 		||
-	
+|date_incendie
+
 |class Intervention 						||
 |---|---|
 |Attribut|methodes|
 |---|---|
-|caserne						|Detecter_incendie ()
+|incendie						|Detecter_incendie ()
 |liste_pompiers						|Detecter_service_urgence ()
 |liste_camions
 |date_intervention
