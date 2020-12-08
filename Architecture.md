@@ -12,7 +12,7 @@ possible
 |coordonnées(GPS)					|set_intensite (int new_intensité)|
 |intensité				 		||
 	
-|class service 						||
+|class Intervention 						||
 |---|---|
 |Attribut|methodes|
 |---|---|
