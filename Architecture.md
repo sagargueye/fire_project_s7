@@ -135,7 +135,9 @@ possible
 | 							|id_camion				|int|			
 | 							|duree_intervention	    |int|
 | 							|date					|datetime|
-
+|coordonnees_capteur |
+|	|coord_matrice|Point|
+|	|coord_latlong|Point|
 
 
 
