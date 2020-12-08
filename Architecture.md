@@ -2,33 +2,33 @@
 
 |class incendie 					|methodes|
 |---|---|
-	|* coordonnées(GPS)				|* set_intensite|
-	|* intensité				 
+|* coordonnées(GPS)				|* set_intensite|
+|* intensité				 
 	
 |class service 						|methodes
 |---|---|
-	|* caserne						|* Detecter_incendie
-	|* incendie						|* Detecter_service_urgence 
-	|						
+|* caserne						|* Detecter_incendie
+|* incendie						|* Detecter_service_urgence 
+						
 	
 	
 |class caserne						|Methodes
 |---|---|
-	|* coordonnées					|* add_pompier
-	|* list camions					|* add_camions
-	|* list pompiers				|* remove_pompier
-									|* remove_camions
-									|* set_coordonnees
+|* coordonnées					|* add_pompier
+|* list camions					|* add_camions
+|* list pompiers				|* remove_pompier
+|									|* remove_camions
+|									|* set_coordonnees
 	
 |class pompier             			|methodes|
 |---|---|
-	|* matricule
-	|* nom
+|* matricule
+|* nom
 	
 |class camion      					|methodes|
 |---|---|
-	|* dimension|
-	|* informations|
+|* dimension|
+|* informations|
 
 
 **SCHEMA MPD BASE DE DONNES SIMULATEUR**
