@@ -17,8 +17,9 @@ possible
 |Attribut|methodes|
 |---|---|
 |caserne						|Detecter_incendie ()
-|incendie						|Detecter_service_urgence ()
-						
+|liste_pompiers						|Detecter_service_urgence ()
+|liste_camions
+|date_intervention
 	
 	
 |class caserne						||
