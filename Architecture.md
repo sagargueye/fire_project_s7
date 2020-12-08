@@ -48,7 +48,7 @@ possible
 
 **SCHEMA MPD BASE DE DONNES SIMULATEUR**
 
-|Entitees					|attributs|			|type attribut|	
+|Entitees					|attributs			|type attribut|	
 |-----|-----|-----|
 |incendie					|id				|int|
 |						|(x, y)( de 0 à 9)		|point|
