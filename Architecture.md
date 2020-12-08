@@ -55,7 +55,7 @@ possible
 |						|intensite			|int|
 							
 
-#**Architecture Emergency**	
+# Architecture Emergency	
 	
 |class incendie 			||
 |---|---|
