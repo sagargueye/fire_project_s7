@@ -11,7 +11,8 @@ possible
 |---|---|
 |coordonnées(GPS)					|set_intensite (int new_intensité)|
 |intensité				 		||
-|date_incendie
+|date_incendie||
+
 
 |class Intervention 						||
 |---|---|
@@ -30,7 +31,7 @@ possible
 |coordonnées					|add_pompier (Pompier p)
 |list camions					|add_camion (Camion C)
 |list pompiers					|remove_pompier (Pompier p)
-|						|remove_camion (Camion C)
+|adress_postal					|remove_camion (Camion C)
 |						|set_coordonnees (int x, int y)
 	
 |class pompier 						||
@@ -55,7 +56,7 @@ possible
 |incendie					|id				|int|
 |						|(x, y)( de 0 à 9)		|point|
 |						|intensite			|int|
-							
+|						|date_incendie			|datetime|
 
 ### Architecture Emergency	
 	
@@ -65,14 +66,15 @@ possible
 |---|---|
 |coordonnées					|set_intensite (int new_intensité)|
 |intensité				 	|
+|date_incendie				 	|
 	
-|class service				||
+|class intervation				||
 |---|---|
 |Attribut|methodes|
 |---|---|
 |caserne				|Detecter_incendie ()
 |incendie				|affecter_caserne ()
-|					|Detecter_service_urgence () 
+|date_intervation			|Detecter_service_urgence () 
 	
 |class caserne				||
 |---|---|
@@ -105,7 +107,7 @@ possible
 |incendie|					|id					|int|
 | 						|(x, y)				    	|point|
 | 						|intensite ( de 0 à 9)			|int|
-| 						|date					|datetime|
+| 						|date_incendie				|datetime|
 |-----|-----|-----|
 |caserne|					|id					|int|
 | 						|(x, y)				    	|point|
@@ -124,7 +126,7 @@ possible
 | 						|id_caserne			    |int|
 |---|---|---|
 |pompier_intervenant|
-| 							|id					    |int|
+| 							|id				    |int|
 | 							|id_pompier			    |int|
 | 							|id_camion				|int|
 | 							|date					|datetime|
@@ -134,7 +136,7 @@ possible
 | 							|id_incendie			|int|
 | 							|id_camion				|int|			
 | 							|duree_intervention	    |int|
-| 							|date					|datetime|
+| 							|date_intervention		|datetime|
 |coordonnees_capteur |
 |	|coord_matrice|Point|
 |	|coord_latlong|Point|
