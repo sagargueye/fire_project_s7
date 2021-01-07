@@ -1,0 +1,217 @@
+https://webpy.org/install.fr
+
+https://dev.mysql.com/doc/connector-python/en/connector-python-installation-binary.html
+pip install mysql-connector-python
+pip install cheroot
+
+
+=====================================================
+                        -SQL-MYSQL-
+=====================================================
+_________
+Emergency
+---------
+
+CREATE TABLE camion(
+  id_camion INT NOT NULL AUTO_INCREMENT,
+  id_intervention INT NULL,
+  id_caserne INT NULL,
+  type_camion VARCHAR(100) NULL,
+  volume DOUBLE NULL,
+  immatriculation VARCHAR(100) NULL,
+  latitude DOUBLE NULL,
+  longitude DOUBLE NULL,
+  CONSTRAINT pk_camion PRIMARY KEY(id_camion)
+);
+CREATE TABLE caserne(
+  id_caserne INT NOT NULL AUTO_INCREMENT,
+  latitude DOUBLE NULL,
+  longitude DOUBLE NULL,
+  telephone INTEGER NULL,
+  CONSTRAINT pk_caserne PRIMARY KEY(id_caserne)
+);
+CREATE TABLE incendie(
+  id_incendie INT NOT NULL AUTO_INCREMENT,
+  intensite INT NULL,
+  CONSTRAINT intensite_ck
+CHECK
+  (intensite BETWEEN 1 AND 9),
+  debut_incendie TIMESTAMP NULL,
+  fin_incendie TIMESTAMP NULL,
+  latitude_incendie DOUBLE NULL,
+  longitude_incendie DOUBLE NULL,
+  id_intervention INT NULL,
+  CONSTRAINT pk_incendie PRIMARY KEY(id_incendie)
+);
+CREATE TABLE intervention(
+  id_intervention INT NOT NULL AUTO_INCREMENT,
+  debut_intervention TIMESTAMP NULL,
+  fin_intervention TIMESTAMP NULL,
+  CONSTRAINT pk_intervention PRIMARY KEY(id_intervention)
+);
+CREATE TABLE pompier(
+  id_pompier INT NOT NULL AUTO_INCREMENT,
+  id_intervention INT NULL,
+  id_caserne INT NULL,
+  nom VARCHAR(100) NULL,
+  matricule VARCHAR(100) NULL,
+  contact INT NULL,
+  CONSTRAINT pk_pompier PRIMARY KEY(id_pompier)
+);
+
+ALTER TABLE
+  camion ADD CONSTRAINT fk_interven_camion FOREIGN KEY(id_intervention) REFERENCES intervention(id_intervention) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE
+  camion ADD CONSTRAINT fk_camion_caserne FOREIGN KEY(id_caserne) REFERENCES caserne(id_caserne) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE
+  incendie ADD CONSTRAINT fk_incendie_interven FOREIGN KEY(id_intervention) REFERENCES intervention(id_intervention) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE
+  pompier ADD CONSTRAINT fk_caserne_pompier FOREIGN KEY(id_caserne) REFERENCES caserne(id_caserne) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE
+  pompier ADD CONSTRAINT fk_pompier_reference_intervention FOREIGN KEY(id_intervention) REFERENCES intervention(id_intervention) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+INSERT INTO  `caserne`(longitude,latitude,  telephone)
+VALUES
+(45.7623889,4.8418176,  0472843718),
+(45.7627835, 4.8439261,  0472605100),
+(45.7627835, 4.8439261,  0472048740),
+(45.7627835,4.8439261,  0472805200),
+(45.778784, 4.878317,  0437472870)
+
+INSERT INTO  `camion`( `id_caserne`, `type_camion`, `volume`, `immatriculation`, `longitude`,`latitude`)
+	VALUES
+	(1,'Eau','3000','1122933',45.7623889, 4.8418176),
+	(2,'Eau','3000','3411229',45.7627835, 4.8439261),
+	(3,'Eau','3000','1522933',45.7627835, 4.8439261),
+	(4,'Eau','3000','6411229',45.7627835, 4.8439261),
+    (5,'Eau','3000','9122933',45.7787840, 4.878317),
+
+	(1,'C02','2000','8411229',45.7623889, 4.8418176),
+	(2,'CO2','2000','2122833',45.7627835, 4.8439261),
+	(3,'C02','2000','7411229',45.7627835, 4.8439261),
+	(4,'CO2','2000','6122833',45.7627835, 4.8439261),
+ 	(5,'CO2','2000','4122833',45.7787840, 4.878317),
+
+	(1,'Poudre','1500','1122934',45.7623889, 4.8418176),
+	(2,'Poudre','1500','2122934',45.7627835, 4.8439261),
+	(3,'Poudre','1500','3122934',45.7627835, 4.8439261),
+	(4,'Poudre','1500','4122934',45.7627835, 4.8439261),
+	(5,'Poudre','1500','5122934',45.7787840, 4.878317),
+
+	(1,'Mousse','2400','1121733',45.7623889, 4.8418176),
+	(2,'Mousse','2400','1122733',45.7627835, 4.8439261),
+	(3,'Mousse','2400','1123733',45.7627835, 4.8439261),
+	(4,'Mousse','2400','1124733',45.7627835, 4.8439261),
+	(5,'Mousse','2400','1125733',45.7787840, 4.878317)
+
+INSERT INTO  `pompier` ( `id_caserne`, `nom`, `matricule`, `contact`  )
+VALUES (1, 'Christian1', '12345', 0657689034),
+(1, 'Bouder1', '13245', 0637689034),
+(1, 'Momar1', '11345', 0652689034),
+(1, 'Asma1', '12385', 0657689039),
+(1, 'ismael1', '12745', 0657189034),
+(1, 'Cayden1', '13346', 0657609034),
+(1, 'Angelina1', '11347', 0657669034),
+(1, 'Jean-dubois1', '11335', 0657689034),
+(1, 'Aya1', '12435', 0647689034),
+(1, 'habib1', '12355', 0657689734),
+
+(2, 'Christian2', '22345', 0657689034),
+(2, 'Bouder2', '23245', 0637689034),
+(2, 'Momar2', '21345', 0652689034),
+(2, 'Asma2', '22385', 0657689039),
+(2, 'ismael2', '22745', 0657189034),
+(2, 'Cayden2', '23346', 0657609034),
+(2, 'Angelina2', '21347', 0657669034),
+(2, 'Jean-dubois2', '21335', 0657689034),
+(2, 'Aya2', '22435', 0647689034),
+(2, 'habib2', '22355', 0657689734),
+
+(3, 'Christian3', '32345', 0657689034),
+(3, 'Bouder3', '33245', 0637689034),
+(3, 'Momar3', '31345', 0652689034),
+(3, 'Asma3', '32385', 0657689039),
+(3, 'ismael3', '32745', 0657189034),
+(3, 'Cayden3', '33346', 0657609034),
+(3, 'Angelina3', '31347', 0657669034),
+(3, 'Jean-dubois3', '31335', 0657689034),
+(3, 'Aya3', '32435', 0647689034),
+(3, 'habib3', '32355', 0657689734),
+
+(4, 'Christian4', '42345', 0657689034),
+(4, 'Bouder4', '43245', 0637689034),
+(4, 'Momar4', '41345', 0652689034),
+(4, 'Asma4', '42385', 0657689039),
+(4, 'ismael4', '42745', 0657189034),
+(4, 'Cayden4', '43346', 0657609034),
+(4, 'Angelina4', '41347', 0657669034),
+(4, 'Jean-dubois4', '41335', 0657689034),
+(4, 'Aya4', '42435', 0647689034),
+(4, 'habib4', '42355', 0657689734),
+
+(5, 'Christian5', '52345', 0657689034),
+(5, 'Bouder5', '53245', 0637689034),
+(5, 'Momar5', '51345', 0652689034),
+(5, 'Asma5', '52385', 0657689039),
+(5, 'ismael5', '52745', 0657189034),
+(5, 'Cayden5', '53346', 0657609034),
+(5, 'Angelina5', '51347', 0657669034),
+(5, 'Jean-dubois5', '51335', 0657689034),
+(5, 'Aya5', '52435', 0647689034),
+(5, 'habib5', '52355', 0657689734)
+
+
+
+--poubelle-------------------------------------------------
+sql_create = """
+CREATE TABLE IF NOT EXISTS Produits (
+   ref int(6) NOT NULL,
+   nom varchar(100) DEFAULT NULL,
+   stock int(4) DEFAULT NULL,
+   prix float(5,2) DEFAULT NULL,
+   PRIMARY KEY(ref),
+   CHECK (stock>=0) ); """
+
+try:
+    conn = mysql.connector.connect(host="127.0.0.1", user="root", password="root", database="bd_emergency")
+
+    cursor = conn.cursor()
+    # cursor.execute(sql_create)
+
+    try:
+        reference = (10)
+        #cursor.execute("""INSERT INTO `incendie`(`longitude`) VALUES(%d)""", reference)
+        # cursor.execute("""INSERT INTO `incendie`(`longitude`) VALUES(10)""")
+
+        # reference = {'ref': 543154, 'nom': "Gelée de coing 300g", 'stock': 5, 'prix': 3.75}
+        # cursor.execute(
+        #    """INSERT INTO Produits (ref, nom, stock, prix) VALUES(%(ref)d, "%(nom)s", %(stock)d, %(prix)f)""",
+        #    reference)
+
+        conn.commit()
+
+    except:
+        # En cas d'erreur on annule les modifications
+        conn.rollback()
+
+    # cursor.execute("""SELECT * FROM incendie WHERE id = %d """, (0,))
+    cursor.execute("""SELECT * FROM camion""")
+    camions = cursor.fetchall()
+    for camion in camions:
+        #print('{0} : {1} - {2}'.format(camion[0], camion[1], camion[2]))
+        print(camions)
+        print('okkkkk')
+
+
+
+
+
+except mysql.connector.errors.InterfaceError as e:
+    print("Error %d: %s" % (e.args[0], e.args[1]))
+    sys.exit(1)
+
+finally:
+    # On ferme la connexion
+    if conn:
+        conn.close()

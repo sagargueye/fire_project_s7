@@ -1,5 +1,5 @@
 # Compiled class file
-*.class
+#*.class
 
 # Log file
 *.log
@@ -21,3 +21,4 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+.code/.metadata/.plugins/com.genuitec.eclipse.code.core/.codeMixData/4/CachedData/5b5c3da232b4eafcf0f94a5572b80a069591231b/CorrelationContextManager-3023da92b21365a9f8f5776006404672.code
