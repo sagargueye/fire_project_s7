@@ -1,3 +1,9 @@
+.idea
+.project
+.classpath
+.vscode
+.settings
+._pycache
 # Compiled class file
 #*.class
 
@@ -11,7 +17,7 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
+#*.jar
 *.war
 *.nar
 *.ear
