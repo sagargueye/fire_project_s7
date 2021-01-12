@@ -4,43 +4,91 @@
  * Purpose: Defines the Class Gestionnaire
  ***********************************************************************/
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.Timer;
-import java.util.TimerTask;
-//import org.json.simple.JSONObject;
 import org.json.*;
-//import org.json.simple.parser.ParseException;
-//import org.json.simple.parser.JSONParser;
+
+
 
 public final class GestionnaireEmergency {
 	public static ArrayList<Incendie> listObjetIncendieCreee= new ArrayList<Incendie>();
 	public static ArrayList<Intervention> listObjetInterventionCreee= new ArrayList<Intervention>();
 	public static ArrayList<Camion> listObjetCamionCreee= new ArrayList<Camion>();
 
-	public static Coordonnees genereCoordAleatoir() {
-		double minLong= 45.3531152;
-		double maxLong= 45.8743837;
-		double minLarg= 4.426158699999951;
-		double maxLarg= 5.227906;
-		double longitude = minLong + (Math.random() * (maxLong - minLong));
-		double largitude = minLarg + (Math.random() * (maxLarg - minLarg));
-		return new Coordonnees(longitude,largitude);
+	
+	private static String POSTRequest(String urlString,String data)  {
+		String returnValue="";
+        //System.out.println(data);
+        try {
+	        URL url = new URL(urlString);
+	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	        conn.setRequestMethod("POST");
+	        //conn.setRequestProperty("userId", "a1bcdefgh");
+	        conn.setRequestProperty("Accept", "application/json");
+	        conn.setDoOutput(true);
+	        OutputStream os = conn.getOutputStream();
+	        os.write(data.getBytes());
+	        os.flush();
+	        os.close();
+	
+	        int responseCode = conn.getResponseCode();
+	        //System.out.println("POST Response Code :  " + responseCode);
+	        //System.out.println("POST Response Message : " + conn.getResponseMessage());
+	        if (responseCode == HttpURLConnection.HTTP_OK) { //success
+	            BufferedReader in = new BufferedReader(new InputStreamReader(
+	                    conn.getInputStream()));
+	            String inputLine;
+	            StringBuffer response = new StringBuffer();
+	
+	            while ((inputLine = in .readLine()) != null) {
+	                response.append(inputLine);
+	            } in .close();
+	
+	            // print result
+	            returnValue=response.toString();
+	            //System.out.println(response.toString());
+	        } else {
+	        	returnValue="POST NOT WORKED";
+	            System.out.println("POST NOT WORKED");
+	        }
+        } catch (Exception e) {
+            System.out.println("Exception in NetClientPost:- " + e);
+            return "Exception in NetClientPost:- " + e;
+        }
+		return returnValue;
 	}
 	
-	public static void declencheIncendieChaque5seconde() {
-		Timer minuteur = new Timer();
-        TimerTask tache = new TimerTask() {
-            public void run() {
-        		Coordonnees c=genereCoordAleatoir();
-        		int intensite=(int) (1 + (Math.random() * (10 - 1)));
-        		Incendie i=new Incendie( c, intensite, java.time.LocalDateTime.now() ) ;
-        		//System.out.println(listObjetIncendieCreee.toString());
-                //System.out.println( i.toString() );
+	private static String GETRequest(String urlCalling) {
+		String result="";
+		try {
+            URL url = new URL(urlCalling);//your url i.e fetch data from .
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+            if (conn.getResponseCode() != 200) {
+                throw new RuntimeException("Failed : HTTP Error code : "
+                        + conn.getResponseCode());
             }
-        };
-        //minuteur.schedule(tache, 0, 5000);
+            InputStreamReader in = new InputStreamReader(conn.getInputStream());
+            BufferedReader br = new BufferedReader(in);
+            String output;
+            while (( output=br.readLine() )!= null) {
+            	result += output;
+                //System.out.println(output);
+            }
+            conn.disconnect();
+
+        } catch (Exception e) {
+            System.out.println("Exception in NetClientGet:- " + e);
+            return "Exception in NetClientGet:- " + e;
+        }
+		return result;
 	}
 	
 	public static Incendie InListObjectIncendie(ArrayList<Incendie> tableau, int idIncendie) {
@@ -79,7 +127,6 @@ public final class GestionnaireEmergency {
 			System.out.println(o.toString());
 		}
 	}
-	
 	public static void afficheListIntervention( ArrayList<Intervention> listIntervention ) {
 		System.out.println("Affichage des Intervention: ");
 		for ( Intervention o: listIntervention ) {
@@ -93,7 +140,68 @@ public final class GestionnaireEmergency {
 		}
 	}
 
-	public static void getListcamionIntervenantChaque5seconde(String j_string) {
+	public static String getNewIncendies() {
+		String result=GETRequest("http://127.0.0.1:8080/list_new_incendie_for_emergency/") ;
+		//String result="{\"incendie\":["+reponse+"]}";
+		//System.out.println( result );
+		return result;
+	}
+	public static ArrayList<Camion> getCamionNoIntervention(Intervention intervention) {
+		String result=GETRequest("http://127.0.0.1:8080/camionsNoIntervention/") ;
+		//System.out.println( result );
+		ArrayList<Camion> CamionsAvailable= new ArrayList<Camion>();
+	    JSONObject json_obj_camions = new JSONObject(result);
+		//System.out.println(json_obj_camions);
+		//camions
+		for (int j = 0; j < json_obj_camions.length(); j++) {
+			//System.out.println("*************************");
+			JSONObject json_obj2_camions = json_obj_camions.getJSONObject(String.valueOf(j));
+			//System.out.println(json_obj2_camions.toString());
+
+		    int id_camion=json_obj2_camions.getInt("id_camion");
+		    double volume=json_obj2_camions.getDouble("volume");
+		    String type_camion=json_obj2_camions.getString("type_camion");
+		    double longitude_camion=json_obj2_camions.getDouble("longitude");
+		    double latitude_camion=json_obj2_camions.getDouble("latitude");
+		    String immatriculation=json_obj2_camions.getString("immatriculation");
+		    int id_caserne=json_obj2_camions.getInt("id_caserne");
+		    
+		    //System.out.println(id_camion);
+		    //System.out.println(volume);
+		    //System.out.println(type_camion);
+		    //System.out.println(longitude_camion);
+		    //System.out.println(latitude_camion);
+		    //System.out.println(immatriculation);
+		    //System.out.println(id_caserne);
+		    Coordonnees coordonneesCamion= new Coordonnees(longitude_camion, latitude_camion);
+		    Camion c = new Camion ( id_camion, coordonneesCamion, null,  immatriculation, type_camion, volume,id_caserne,intervention );
+		    CamionsAvailable.add(c);
+		}
+		return CamionsAvailable;
+	}
+	/**
+	 * Calculate distance between two points in latitude and longitude taking
+	 * into account height difference. If you are not interested in height
+	 * difference pass 0.0. Uses Haversine method as its base.
+	 * 
+	 * lat1, lon1 Start point lat2, lon2 End point el1 Start altitude in meters
+	 * el2 End altitude in meters
+	 * @returns Distance in Meters
+	 */
+	public static double distance(double lat1,double lon1, double lat2, double lon2) {
+	    final int R = 6371; // Radius of the earth
+
+	    double latDistance = Math.toRadians(lat2 - lat1);
+	    double lonDistance = Math.toRadians(lon2 - lon1);
+	    double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+	            + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
+	            * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+	    double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	    double distance = R * c * 1000; // convert to meters
+	    distance = Math.pow(distance, 2) ;
+	    return Math.sqrt(distance);
+	}
+	public static void getListcamionIntervenant(String j_string) {
 		Timer minuteur = new Timer();
         TimerTask tache = new TimerTask() {
             public void run() {
@@ -200,93 +308,110 @@ public final class GestionnaireEmergency {
         };
         minuteur.schedule(tache, 0, 10000);
 	}
-	
+	public static ArrayList<Camion>  removeElement(ArrayList<Camion> camions, Camion c) {
+		ArrayList<Camion>  result = new ArrayList<Camion> ();
+	    for(Camion item : camions)
+	        if(!c.equals(item))
+	            result.add(item);
+
+	    return result;
+	}
+	public static ArrayList<Camion> deleteCamionPlusLoin (ArrayList<Camion> camions,Double distance, Camion c){
+		Double dMax=distance;
+		Camion cMax = null;
+		for ( Camion o: camions ) {
+			Double odistance= o.getDistanceAssociee();
+			if(odistance >= dMax) {
+				dMax=odistance;
+				cMax=o;
+			}
+		}
+		camions=removeElement(camions,cMax);
+		return camions;
+	}
+	private static String listCamionsToJson(ArrayList<Camion> camionsSelectionnes) {
+		String data="{\"camion\": [";
+		for ( Camion o: camionsSelectionnes ) {
+			data += "{";
+			data +="\"id_camion\": "+ o.getIdCamion() +",";
+			data +="\"id_intervention\": "+ o.getIntervention().getIdIntervention();			
+			data += "},";
+		}
+		data=removeLastChar(data);
+		data += "]}";
+		//System.out.println(data);
+		return data;		
+	}
+	public static String removeLastChar(String s) {
+	    return (s == null || s.length() == 0)
+	      ? null
+	      : (s.substring(0, s.length() - 1));
+	}
+	public static void gestionIntervention(String incendies) {
+		System.out.println("------gestion invention---------");
+		ArrayList<Camion> CamionsAvailable= new ArrayList<Camion>();
+		JSONObject json_obj = new JSONObject(incendies);
+		System.out.println(json_obj);
+
+		//incendie
+		for (int i = 0; i < json_obj.length(); i++) {
+			System.out.println("*************************");
+			JSONObject json_obj2 = json_obj.getJSONObject(String.valueOf(i));
+			//System.out.println(json_obj2.toString());
+
+		    int id_incendie=json_obj2.getInt("id_incendie");
+		    double longitude_incendie=json_obj2.getDouble("longitude");
+		    double latitude_incendie=json_obj2.getDouble("latitude");
+		    int intensite=json_obj2.getInt("intensite");
+		    String debut_incendie_string=json_obj2.getString("debut_incendie");
+		    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"); 
+		    LocalDateTime debut_incendie = LocalDateTime.parse(debut_incendie_string, formatter);
+		    
+		    //System.out.println(id_incendie);
+		    //System.out.println(intensite);
+		    //System.out.println(longitude_incendie);
+		    //System.out.println(latitude_incendie);
+		    //System.out.println(debut_incendie);
+		    
+		    //on cree lobject intervention
+		    Intervention intervention= new Intervention();
+		    String result_intervention=POSTRequest("http://127.0.0.1:8080/newIntervention/", "{\"debut_intervention\":\""+intervention.getDebutIntervention()+"\"}");
+		    JSONObject json_obj_intervention = new JSONObject(result_intervention);
+		    JSONObject json_obj2_intervention = json_obj_intervention.getJSONObject(String.valueOf("0"));
+		    int id_intervention=json_obj2_intervention.getInt("MAX(id_intervention)");
+			intervention.setIdIntervention(id_intervention);
+
+		    ArrayList<Camion> camions=getCamionNoIntervention(intervention);
+		    ArrayList<Camion> camionsSelectionnes= new ArrayList<Camion>();
+		    //afficheListCamion(camions);
+		    for ( Camion o: camions ) {
+		    	Coordonnees coordCamion=o.getCoordCamion();
+		    	double latitude_camion=coordCamion.getLatitude();
+		    	double longitude_camion=coordCamion.getLongitude();
+				//System.out.println(o.getCoordCamion().toString());
+				double distance=distance(latitude_incendie, longitude_incendie, latitude_camion, longitude_camion);
+				//System.out.println(distance);
+				o.setDistanceAssociee(distance);
+				camionsSelectionnes.add(o);
+				if(camionsSelectionnes.size() > intensite) {
+					camionsSelectionnes=deleteCamionPlusLoin(camionsSelectionnes,distance, o);
+				}
+			}
+			afficheListCamion(camionsSelectionnes);
+			String result = POSTRequest("http://127.0.0.1:8080/camionsIntervenant/", listCamionsToJson(camionsSelectionnes));
+			System.out.println(result);
+			
+		}
+	}
 	public static void main(String[] args) {
-		declencheIncendieChaque5seconde();
-		String j_string="{\r\n" + 
-				"  \"camions\": [\r\n" + 
-				"    {\r\n" + 
-				"      \"id\": 1,\r\n" + 
-				"      \"volume\": 29,\r\n" + 
-				"      \"matricule\": \"DDCHB347YYD\",\r\n" + 
-				"      \"idintervention\": 9,\r\n" +  
-				"      \"coordcamion\": {\r\n" + 
-				"      		\"longitude\": 12,\r\n" + 
-				"      		\"latitude\": 29,\r\n" + 
-				"		},\r\n" + 
-				"      \"coordcaserne\": {\r\n" + 
-				"			\"longitude\": 12,\r\n" + 
-				"			\"latitude\": 29,\r\n" + 
-				"		},\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"id\": 2,\r\n" + 
-				"      \"volume\": 29,\r\n" + 
-				"      \"matricule\": \"DDCHB347YYD\",\r\n" + 
-				"      \"idintervention\": 9,\r\n" +  
-				"      \"coordcamion\": {\r\n" + 
-				"      		\"longitude\": 12,\r\n" + 
-				"      		\"latitude\": 29,\r\n" + 
-				"		},\r\n" + 
-				"      \"coordcaserne\": {\r\n" + 
-				"			\"longitude\": 12,\r\n" + 
-				"			\"latitude\": 29,\r\n" + 
-				"		},\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"id\": 3,\r\n" + 
-				"      \"volume\": 29,\r\n" + 
-				"      \"matricule\": \"DDCHB347YYD\",\r\n" + 
-				"      \"idintervention\": 7,\r\n" +  
-				"      \"coordcamion\": {\r\n" + 
-				"      		\"longitude\": 12,\r\n" + 
-				"      		\"latitude\": 29,\r\n" + 
-				"		},\r\n" + 
-				"      \"coordcaserne\": {\r\n" + 
-				"			\"longitude\": 12,\r\n" + 
-				"			\"latitude\": 29,\r\n" + 
-				"		},\r\n" + 
-				"    }\r\n" + 
-				"  ],\r\n" + 
-				"  \"intervention\": [\r\n" +
-				"    {\r\n" + 
-				"      \"id\": 9,\r\n" + 
-				"      \"datedeb\": \"2020-12-21 03:50:25\",\r\n" + 
-				"      \"datefin\": \"\",\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"id\": 7,\r\n" + 
-				"      \"datedeb\": \"2020-12-20 03:50:25\",\r\n" + 
-				"      \"datefin\": \"2020-12-20 04:50:25\",\r\n" + 
-				"    }\r\n" + 
-				"  ],\r\n" + 
-				"  \"incendie\": [\r\n" +
-				"    {\r\n" + 
-				"      \"id\": 3,\r\n" + 
-				"      \"intensite\": 5,\r\n" + 
-				"      \"idintervention\": 9,\r\n" +  
-				"      \"datedeb\": \"2020-12-21 02:50:25\",\r\n" + 
-				"      \"datefin\": \"\",\r\n" +  
-				"      \"coordonnees\": {\r\n" + 
-				"			\"longitude\": 12,\r\n" + 
-				"			\"latitude\": 29,\r\n" + 
-				"		}\r\n" + 
-				"    },\r\n" + 
-				"    {\r\n" + 
-				"      \"id\": 1,\r\n" + 
-				"      \"intensite\": 6,\r\n" + 
-				"      \"idintervention\": 7,\r\n" +  
-				"      \"datedeb\": \"2020-12-20 02:50:25\",\r\n" +  
-				"      \"datefin\": \"2020-12-20 04:50:25\",\r\n" +  
-				"      \"coordonnees\": {\r\n" + 
-				"			\"longitude\": 12,\r\n" + 
-				"			\"latitude\": 29,\r\n" + 
-				"		}\r\n" + 
-				"    }\r\n" + 
-				"  ]\r\n" + 
-				"}";
-		getListcamionIntervenantChaque5seconde(j_string);
-        
+		Timer minuteur = new Timer();
+		TimerTask tache = new TimerTask() {
+			public void run() {
+				String incendies=getNewIncendies();
+				gestionIntervention(incendies);
+			}
+		};
+		minuteur.schedule(tache, 0, 9000);
 	}
 
 }

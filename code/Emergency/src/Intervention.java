@@ -20,6 +20,10 @@ public class Intervention {
 		//this.listeCamion = listeCamion;
 		this.debutIntervention = debutIntervention;
 	}
+	public Intervention() {
+		this.debutIntervention = java.time.LocalDateTime.now();
+	}
+
 	public Intervention(int idIntervention,  LocalDateTime debutIntervention, LocalDateTime finIntervention) {
 		this.idIntervention = idIntervention;
 		this.debutIntervention = debutIntervention;
@@ -53,6 +57,11 @@ public class Intervention {
 	public int getIdIntervention() {
 		return this.idIntervention;
 	}
+
+	public void setIdIntervention(int id) {
+		this.idIntervention=id;
+	}
+
 
 	public LocalDateTime getDebutIntervention() {
 		return this.debutIntervention;
